@@ -8,8 +8,27 @@
 #define _UTHREADS_H
 
 
-#define MAX_THREAD_NUM 100 /* maximal number of threads */
+
 #define STACK_SIZE 4096 /* stack size per thread (in bytes) */
+#include "iostream"
+#include "cstring"
+#define LIBRARY_ERROR "thread library error: "
+#define SYSTEM_CALL_ERROR "system error: "
+#define EXIT_CODE_FAILURE 1
+#include <sys/time.h>
+
+
+
+void printErrorLibrary (const std::string &errorMsg)
+{
+    std::cerr << LIBRARY_ERROR << errorMsg << std::endl;
+}
+
+void printErrorSystemCall (const std::string &errorMsg)
+{
+    std::cerr << SYSTEM_CALL_ERROR << errorMsg << std::endl;
+    exit (EXIT_CODE_FAILURE);
+}
 
 typedef void (*thread_entry_point)(void);
 
