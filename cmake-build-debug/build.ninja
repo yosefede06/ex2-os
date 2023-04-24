@@ -93,6 +93,13 @@ build CMakeFiles/ex2_os.dir/demo_singInt_handler.c.o: C_COMPILER__ex2_os_Debug /
   OBJECT_DIR = CMakeFiles/ex2_os.dir
   OBJECT_FILE_DIR = CMakeFiles/ex2_os.dir
 
+build CMakeFiles/ex2_os.dir/Scheduler.cpp.o: CXX_COMPILER__ex2_os_Debug /Users/user/CLionProjects/ex2-os/Scheduler.cpp || cmake_object_order_depends_target_ex2_os
+  DEP_FILE = CMakeFiles/ex2_os.dir/Scheduler.cpp.o.d
+  FLAGS = -g -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++11
+  INCLUDES = -I/Users/user/CLionProjects/ex2-os/.
+  OBJECT_DIR = CMakeFiles/ex2_os.dir
+  OBJECT_FILE_DIR = CMakeFiles/ex2_os.dir
+
 build CMakeFiles/ex2_os.dir/uthreads.cpp.o: CXX_COMPILER__ex2_os_Debug /Users/user/CLionProjects/ex2-os/uthreads.cpp || cmake_object_order_depends_target_ex2_os
   DEP_FILE = CMakeFiles/ex2_os.dir/uthreads.cpp.o.d
   FLAGS = -g -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++11
@@ -100,8 +107,8 @@ build CMakeFiles/ex2_os.dir/uthreads.cpp.o: CXX_COMPILER__ex2_os_Debug /Users/us
   OBJECT_DIR = CMakeFiles/ex2_os.dir
   OBJECT_FILE_DIR = CMakeFiles/ex2_os.dir
 
-build CMakeFiles/ex2_os.dir/Scheduler.cpp.o: CXX_COMPILER__ex2_os_Debug /Users/user/CLionProjects/ex2-os/Scheduler.cpp || cmake_object_order_depends_target_ex2_os
-  DEP_FILE = CMakeFiles/ex2_os.dir/Scheduler.cpp.o.d
+build CMakeFiles/ex2_os.dir/Handle.cpp.o: CXX_COMPILER__ex2_os_Debug /Users/user/CLionProjects/ex2-os/Handle.cpp || cmake_object_order_depends_target_ex2_os
+  DEP_FILE = CMakeFiles/ex2_os.dir/Handle.cpp.o.d
   FLAGS = -g -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2 -std=gnu++11
   INCLUDES = -I/Users/user/CLionProjects/ex2-os/.
   OBJECT_DIR = CMakeFiles/ex2_os.dir
@@ -115,7 +122,7 @@ build CMakeFiles/ex2_os.dir/Scheduler.cpp.o: CXX_COMPILER__ex2_os_Debug /Users/u
 #############################################
 # Link the executable ex2_os
 
-build ex2_os: CXX_EXECUTABLE_LINKER__ex2_os_Debug CMakeFiles/ex2_os.dir/demo_itimer.c.o CMakeFiles/ex2_os.dir/demo_jmp.c.o CMakeFiles/ex2_os.dir/demo_singInt_handler.c.o CMakeFiles/ex2_os.dir/uthreads.cpp.o CMakeFiles/ex2_os.dir/Scheduler.cpp.o
+build ex2_os: CXX_EXECUTABLE_LINKER__ex2_os_Debug CMakeFiles/ex2_os.dir/demo_itimer.c.o CMakeFiles/ex2_os.dir/demo_jmp.c.o CMakeFiles/ex2_os.dir/demo_singInt_handler.c.o CMakeFiles/ex2_os.dir/Scheduler.cpp.o CMakeFiles/ex2_os.dir/uthreads.cpp.o CMakeFiles/ex2_os.dir/Handle.cpp.o
   FLAGS = -g -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.2
   OBJECT_DIR = CMakeFiles/ex2_os.dir
   POST_BUILD = :

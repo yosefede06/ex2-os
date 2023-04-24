@@ -6,7 +6,6 @@
 
 
 
-
 Thread::Thread (State state, size_t quantum, bool allocate_stack, thread_entry_point entry_point) {
     if(allocate_stack) {
         stack = new char[STACK_SIZE];
@@ -24,4 +23,8 @@ Thread::Thread (State state, size_t quantum, bool allocate_stack, thread_entry_p
 
 Thread::~Thread() {
     delete[] this->stack;
+}
+
+Thread::Thread() {
+
 }

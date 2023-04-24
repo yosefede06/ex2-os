@@ -61,15 +61,14 @@ enum State {
 };
 
 class Thread {
-    private:
-    State state;
-    char * stack;
-    sigjmp_buf env;
-    size_t quantum_t;
-
-    public:
-    Thread(State state, size_t quantum, bool allocate_stack, thread_entry_point entry_point = nullptr);
-    ~Thread();
+    public :
+        State state;
+        char * stack;
+        sigjmp_buf env;
+        size_t quantum_t;
+        Thread(State state, size_t quantum, bool allocate_stack, thread_entry_point entry_point = nullptr);
+        Thread();
+        ~Thread();
 };
 
 

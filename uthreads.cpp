@@ -1,14 +1,11 @@
 #include "uthreads.h"
-#include <setjmp.h>
 
-#include <Thread.h>
-#include <Scheduler.h>
-
-
+Scheduler * scheduler;
+void callback_handler (int signal) {
+    scheduler -> change_thread(signal);
+}
 
 using namespace std;
-
-Scheduler map_threads;
 
 /**
  * @brief initializes the thread library.
@@ -25,15 +22,10 @@ Scheduler map_threads;
 
 int uthread_init(int quantum_usecs) {
     if(quantum_usecs < 0) {
-        printErrorLibrary("non-positive quantum_usecs");
-        return -1;
+        return handleErrorLibrary("non-positive quantum_usecs");
     }
-
-    Scheduler *scheduler = new Scheduler();
-    if (scheduler->init_scheduler(quantum_usecs)){
-
-    }
-
+    scheduler = new Scheduler(quantum_usecs, callback_handler);
+    return scheduler->init_scheduler();
 }
 
 
@@ -50,7 +42,19 @@ int uthread_init(int quantum_usecs) {
  *
  * @return On success, return the ID of the created thread. On failure, return -1.
 */
-int uthread_spawn(thread_entry_point entry_point);
+int uthread_spawn(thread_entry_point entry_point) {
+    // handles null entry_point
+    scheduler->block_signals();
+    if(entry_point == nullptr) {
+        return handleErrorLibrary("Null entry_point");
+    }
+    int tid = scheduler->add_new_thread(READY, 0, true, entry_point);
+    if (tid == FAILURE_ERROR) {
+        handleErrorLibrary("Maximum number of threads delimited");
+    }
+    scheduler->unblock_signals();
+    return tid;
+}
 
 
 /**
@@ -64,7 +68,15 @@ int uthread_spawn(thread_entry_point entry_point);
  * itself or the main thread is terminated, the function does not return.
 */
 int uthread_terminate(int tid) {
-
+    scheduler->block_signals();
+    if (tid == 0) {
+        // remove all
+        scheduler->remove_all();
+        handleForcedExit();
+    }
+    scheduler->remove_thread(tid);
+    scheduler->unblock_signals();
+    return 0;
 }
 
 /**
@@ -77,7 +89,17 @@ int uthread_terminate(int tid) {
  * @return On success, return 0. On failure, return -1.
 */
 int uthread_block(int tid) {
-
+    scheduler->block_signals();
+    if(!scheduler->check_thread(tid) || tid == 0){
+        scheduler->unblock_signals();
+        return handleErrorLibrary("The id is invalid");
+    }
+    if (!scheduler->block_thread(tid)) {
+        scheduler->unblock_signals();
+        return handleErrorLibrary("Trying to block an already blocked thread is an error");
+    }
+    scheduler->unblock_signals();
+    return 0;
 }
 
 
@@ -90,7 +112,14 @@ int uthread_block(int tid) {
  * @return On success, return 0. On failure, return -1.
 */
 int uthread_resume(int tid) {
-
+    scheduler->block_signals();
+    if(!scheduler->check_thread(tid)){
+        scheduler->unblock_signals();
+        return handleErrorLibrary("The id is invalid");
+    }
+    scheduler->unblock_thread(tid);
+    scheduler->unblock_signals();
+    return 0;
 }
 
 
@@ -107,7 +136,19 @@ int uthread_resume(int tid) {
  *
  * @return On success, return 0. On failure, return -1.
 */
-int uthread_sleep(int num_quantums);
+int uthread_sleep(int num_quantums){
+    scheduler->block_signals();
+    if(num_quantums <= 0) {
+        return handleErrorLibrary("non-positive quantum error");
+    }
+    if(uthread_get_tid() == 0){
+        scheduler->unblock_signals();
+        return handleErrorLibrary("The main thread can't go on sleep state");
+    }
+    scheduler->sleep_running_thread(num_quantums);
+    scheduler->unblock_signals();
+    return 0;
+}
 
 
 /**
@@ -115,7 +156,9 @@ int uthread_sleep(int num_quantums);
  *
  * @return The ID of the calling thread.
 */
-int uthread_get_tid();
+int uthread_get_tid() {
+    return scheduler->get_running_thread_tid();
+}
 
 
 /**
@@ -126,7 +169,13 @@ int uthread_get_tid();
  *
  * @return The total number of quantums.
 */
-int uthread_get_total_quantums();
+int uthread_get_total_quantums(){
+// block signal
+    scheduler->block_signals();
+    int total = scheduler->get_total_quantums();
+    scheduler->unblock_signals();
+    return total;
+}
 
 
 /**
@@ -138,6 +187,15 @@ int uthread_get_total_quantums();
  *
  * @return On success, return the number of quantums of the thread with ID tid. On failure, return -1.
 */
-int uthread_get_quantums(int tid);
+int uthread_get_quantums(int tid){
+    scheduler->block_signals();
+    if (!scheduler->check_thread(tid)) {
+        scheduler->unblock_signals();
+        return handleErrorLibrary("no thread with ID tid exists");
+    }
+    int quantum_thread = (int) scheduler->get_thread(tid).quantum_t;
+    scheduler->unblock_signals();
+    return quantum_thread;
+}
 
 

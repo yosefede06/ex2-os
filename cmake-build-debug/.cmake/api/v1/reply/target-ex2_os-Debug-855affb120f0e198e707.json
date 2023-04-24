@@ -88,8 +88,9 @@
 			},
 			"sourceIndexes" : 
 			[
-				3,
-				6
+				5,
+				6,
+				7
 			]
 		}
 	],
@@ -125,16 +126,18 @@
 				0,
 				1,
 				2,
-				3,
-				6
+				5,
+				6,
+				7
 			]
 		},
 		{
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
+				3,
 				4,
-				5
+				8
 			]
 		}
 	],
@@ -160,12 +163,6 @@
 		},
 		{
 			"backtrace" : 1,
-			"compileGroupIndex" : 1,
-			"path" : "uthreads.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
 			"path" : "uthreads.h",
 			"sourceGroupIndex" : 1
 		},
@@ -179,6 +176,23 @@
 			"compileGroupIndex" : 1,
 			"path" : "Scheduler.cpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "uthreads.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "Handle.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Handle.h",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "EXECUTABLE"
