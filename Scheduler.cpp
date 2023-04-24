@@ -94,6 +94,7 @@ int Scheduler::init_scheduler(){
     if(this->set_thread(0, *thread) == FAILURE_ERROR) {
         return FAILURE_ERROR;
     }
+    this->total_quantums++;
     sigemptyset (&this->set);
     sigaddset (&this->set, SIGVTALRM);
 
