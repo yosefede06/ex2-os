@@ -1,12 +1,12 @@
-cmake_minimum_required(VERSION 3.21)
-project(ex2_os)
+cmake_minimum_required(VERSION 3.1)
+#set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+#set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+project(threads VERSION 1.0 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+add_library(uthreads uthreads.h uthreads.cpp Scheduler Thread Thread.h Thread.cpp
+        Scheduler.h Scheduler.cpp Handle Handle.h Handle.cpp )
 
-include_directories(.)
+set_property(TARGET uthreads PROPERTY CXX_STANDARD 11)
+target_compile_options(uthreads PUBLIC -Wall -Wextra)
 
-add_executable(ex2_os
-        demo_itimer.c
-        demo_jmp.c
-        demo_singInt_handler.c
-        uthreads.h Scheduler.h Scheduler.cpp uthreads.cpp Handle.cpp Handle.h)
+add_subdirectory(tests)

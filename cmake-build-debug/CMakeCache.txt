@@ -140,7 +140,22 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=ex2_os
+CMAKE_PROJECT_NAME:STATIC=threads
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=1.0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib
@@ -205,13 +220,22 @@ CMAKE_STRIP:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/Xcode
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Value Computed by CMake
-ex2_os_BINARY_DIR:STATIC=/Users/user/CLionProjects/ex2-os/cmake-build-debug
+testers_BINARY_DIR:STATIC=/Users/user/CLionProjects/ex2-os/cmake-build-debug/tests
 
 //Value Computed by CMake
-ex2_os_IS_TOP_LEVEL:STATIC=ON
+testers_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-ex2_os_SOURCE_DIR:STATIC=/Users/user/CLionProjects/ex2-os
+testers_SOURCE_DIR:STATIC=/Users/user/CLionProjects/ex2-os/tests
+
+//Value Computed by CMake
+threads_BINARY_DIR:STATIC=/Users/user/CLionProjects/ex2-os/cmake-build-debug
+
+//Value Computed by CMake
+threads_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+threads_SOURCE_DIR:STATIC=/Users/user/CLionProjects/ex2-os
 
 
 ########################
@@ -306,7 +330,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
