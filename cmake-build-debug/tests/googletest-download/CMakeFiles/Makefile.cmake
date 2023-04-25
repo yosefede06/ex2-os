@@ -24,7 +24,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.18/Modules/RepositoryInfo.txt.in"
   )
 
-# The corresponding makefile is:
+# The corresponding Makefile is:
 set(CMAKE_MAKEFILE_OUTPUTS
   "Makefile"
   "CMakeFiles/cmake.check_cache"

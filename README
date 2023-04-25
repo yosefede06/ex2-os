@@ -1,17 +1,75 @@
+yosefede06, r301299
+Yosef Edery Anahory (345175475), Raphael Haddad (342810835)
+EX: 2
+
+FILES:
+Handle.c -- A file that handles handle errors.
+Handle.h -- A file with some headers
+Thread.cpp -- A file which represents a Thread
+Thread.h  -- A file with some headers
+Scheduler.cpp -- A file which schedules the threads
+Scheduler.h -- A file with some headers
+uthreads.cpp -- A file which implements the API
+
+
+REMARKS:
+These are some remarks that
+I want the graders to know
+about this submission.
+
+ANSWERS:
+
+Q1:
+a. sigsetjmp and siglongjmp are functions for jumps in programs that handle signals.
+sigsetjmp is used to set a point in the program from which a jump can be made later using siglongjmp.
+When siglongjmp is called, the program execution jumps back to the point in the program specified by the earlier
+call to sigsetjmp.
+These functions are used in signal handlers to jump out of the signal handling code and return
+to the interrupted code.
+
+b. sigsetjmp and siglongjmp can affect the signal mask. The signal mask is a set of signals that are blocked from
+being delivered to the program. When sigsetjmp is called, it saves the current signal mask along with any
+other necessary state information (PC, Stack,...).
+When siglongjmp is called, it restores the saved signal mask along with the saved state information.
+Therefore, any signals that were blocked when sigsetjmp was called will still be blocked after
+siglongjmp returns.
+
+Q2:
+User-level threads are a way of implementing multitasking in a program. One general use of user-level threads is
+in web servers. Web servers handle multiple incoming client requests at the same time, and user-level threads
+can be used to handle these requests in parallel. For example, a web server could create a separate thread for
+each incoming client request, allowing multiple requests to be handled simultaneously. User-level threads are a
+reasonable choice for this example because they are lightweight and can be managed by the program itself, without
+requiring intervention from the operating system. Additionally, user-level threads can be more efficient than
+kernel-level threads for handling large numbers of relatively lightweight tasks, since they don't incur the
+overhead of kernel-level context switches.
 All questions are worth an equal amount of points.
-1. Siglongjmp and sigsetjmp:
-    a. Describe what the functions sigsetjmp and siglongjmp do.
-    b. Describe how sigsetjmp and siglongjmp affect masking.
-2. Describe one general use of user-level threads and explain why user-level threads are a
-reasonable choice for your example.
-3. Google’s Chrome browser creates a new process for each tab. What are the advantages
-and disadvantages of creating the new process (instead of creating a kernel-level
-thread)?
-4. Interrupts and signals:
-a. Open an application (for example, “Shotwell” on one of the CS computers). Use
-the “ps -A” command to extract the application’s pid (process ID).
-b. Open a shell and type “kill pid”.
-c. Explain which interrupts and signals are involved during the command execution,
-what triggered them and who should handle them. In your answer, refer to the
-keyboard, OS, shell, and the application you just killed
-5. What is the difference between ‘real’ and ‘virtual’ time? Give one example of using each.
+
+Q3:
+The main advantage of creating a new process for each tab in Google's Chrome browser is that it
+provides better isolation between tabs. If one tab crashes, it does not affect the other tabs, and if
+one tab is compromised by a malicious website, it does not affect the other tabs. Another advantage is
+that each process can run in its own address space, reducing the risk of memory corruption or
+other security vulnerabilities.
+The main disadvantage is that creating a new process for each tab can consume a significant amount of system
+resources, such as memory.
+In addition, creating a new process for each tab can increase the startup time of the browser.
+
+Q4:
+By default, the signal that is sent is SIGTERM (signal number 15), which is a termination signal
+that allows the process to perform cleanup operations before exiting.
+The keyboard generates an interrupt signal when a key is pressed.
+The operating system handles this interrupt and passes the input to the shell.
+The shell interprets the input and executes the "kill" command, which generates a signal that is sent
+to the specified process. The operating system handles the signal and passes it to the Shotwell application.
+The application's signal handler (if one is installed) will handle the signal and perform any necessary cleanup
+operations before returning control to the application. If the application does not have a signal handler for
+the specified signal, the process will be terminated.
+
+Q5:
+Real time refers to the duration of a process from start to finish within the system.
+Virtual time refers to a concept where time is represented as a discrete variable and can be manipulated
+to simulate the behavior of a system over time.
+In this exercise, the quantum of the thread represents the virtual time.
+However, the actual time begins at the initiation of the function and continues indefinitely,
+even if the virtual time is temporarily halted.
