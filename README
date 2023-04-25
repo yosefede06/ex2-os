@@ -1,0 +1,17 @@
+All questions are worth an equal amount of points.
+1. Siglongjmp and sigsetjmp:
+    a. Describe what the functions sigsetjmp and siglongjmp do.
+    b. Describe how sigsetjmp and siglongjmp affect masking.
+2. Describe one general use of user-level threads and explain why user-level threads are a
+reasonable choice for your example.
+3. Google’s Chrome browser creates a new process for each tab. What are the advantages
+and disadvantages of creating the new process (instead of creating a kernel-level
+thread)?
+4. Interrupts and signals:
+a. Open an application (for example, “Shotwell” on one of the CS computers). Use
+the “ps -A” command to extract the application’s pid (process ID).
+b. Open a shell and type “kill pid”.
+c. Explain which interrupts and signals are involved during the command execution,
+what triggered them and who should handle them. In your answer, refer to the
+keyboard, OS, shell, and the application you just killed
+5. What is the difference between ‘real’ and ‘virtual’ time? Give one example of using each.

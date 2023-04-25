@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/cs/usr/yosefede06/Desktop/C6/ex2-os1/cmake-build-debug/tests",
+  "command": "/usr/bin/c++  -I/cs/usr/yosefede06/Desktop/C6/ex2-os1/tests/.. -isystem /cs/usr/yosefede06/Desktop/C6/ex2-os1/cmake-build-debug/tests/googletest-src/googletest/include -isystem /cs/usr/yosefede06/Desktop/C6/ex2-os1/cmake-build-debug/tests/googletest-src/googletest -g -Wall -Wextra -std=gnu++14 -o CMakeFiles/theTests.dir/tests_to_be_ran_separately.cpp.o -c /cs/usr/yosefede06/Desktop/C6/ex2-os1/tests/tests_to_be_ran_separately.cpp",
+  "file": "/cs/usr/yosefede06/Desktop/C6/ex2-os1/tests/tests_to_be_ran_separately.cpp"
+}
+]

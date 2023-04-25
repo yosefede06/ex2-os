@@ -8,13 +8,8 @@
 #define _UTHREADS_H
 
 
-
+#define MAX_THREAD_NUM 100 /* maximal number of threads */
 #define STACK_SIZE 4096 /* stack size per thread (in bytes) */
-#include "iostream"
-#include "cstring"
-#include <Handle.h>
-#include <Scheduler.h>
-
 
 typedef void (*thread_entry_point)(void);
 

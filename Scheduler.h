@@ -5,12 +5,12 @@
 #ifndef EX2_OS_SCHEDULER_H
 #define EX2_OS_SCHEDULER_H
 #include <map>
-#include <Thread.h>
-#define MAX_THREAD_NUM 100 /* maximal number of threads */
+#include "Thread.h"
+#include "uthreads.h"
 #include <map>
 #include <sys/time.h>
 #include <set>
-#include <Handle.h>
+#include "Handle.h"
 #include <signal.h>
 #include <queue>
 
@@ -42,7 +42,7 @@ public:
     int remove_thread(size_t);
     void run_next_thread();
     void remove_thread_from_ready(size_t tid);
-    int block_thread(size_t tid);
+    void block_thread(size_t tid);
     void unblock_thread(size_t tid);
     int save_current_execution_context();
     void ready_thread(size_t);
@@ -50,6 +50,7 @@ public:
     void sleep_running_thread(size_t);
     void _handle_sleep_threads();
     void remove_all();
+    void reset_time();
 };
 
 

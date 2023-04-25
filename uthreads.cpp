@@ -1,6 +1,10 @@
 #include "uthreads.h"
+#include "iostream"
+#include "Handle.h"
+#include "Scheduler.h"
 
 Scheduler * scheduler;
+
 void callback_handler (int signal) {
     scheduler -> change_thread(signal);
 }
@@ -22,7 +26,7 @@ using namespace std;
 
 int uthread_init(int quantum_usecs) {
     if(quantum_usecs < 0) {
-        return handleErrorLibrary("non-positive quantum_usecs");
+        return handleErrorLibrary((char  *) "non-positive quantum_usecs");
     }
     scheduler = new Scheduler(quantum_usecs, callback_handler);
     return scheduler->init_scheduler();
@@ -46,11 +50,11 @@ int uthread_spawn(thread_entry_point entry_point) {
     // handles null entry_point
     scheduler->block_signals();
     if(entry_point == nullptr) {
-        return handleErrorLibrary("Null entry_point");
+        return handleErrorLibrary((char  *) "Null entry_point");
     }
     int tid = scheduler->add_new_thread(READY, 0, true, entry_point);
     if (tid == FAILURE_ERROR) {
-        handleErrorLibrary("Maximum number of threads delimited");
+        handleErrorLibrary((char  *) "Maximum number of threads delimited");
     }
     scheduler->unblock_signals();
     return tid;
@@ -74,7 +78,10 @@ int uthread_terminate(int tid) {
         scheduler->remove_all();
         handleForcedExit();
     }
-    scheduler->remove_thread(tid);
+    if(scheduler->remove_thread(tid) == FAILURE_ERROR) {
+        scheduler->unblock_signals();
+        return FAILURE_ERROR;
+    }
     scheduler->unblock_signals();
     return 0;
 }
@@ -92,12 +99,9 @@ int uthread_block(int tid) {
     scheduler->block_signals();
     if(!scheduler->check_thread(tid) || tid == 0){
         scheduler->unblock_signals();
-        return handleErrorLibrary("The id is invalid");
+        return handleErrorLibrary((char  *) "The id is invalid");
     }
-    if (!scheduler->block_thread(tid)) {
-        scheduler->unblock_signals();
-        return handleErrorLibrary("Trying to block an already blocked thread is an error");
-    }
+    scheduler->block_thread(tid);
     scheduler->unblock_signals();
     return 0;
 }
@@ -115,7 +119,7 @@ int uthread_resume(int tid) {
     scheduler->block_signals();
     if(!scheduler->check_thread(tid)){
         scheduler->unblock_signals();
-        return handleErrorLibrary("The id is invalid");
+        return handleErrorLibrary((char  *) "The id is invalid");
     }
     scheduler->unblock_thread(tid);
     scheduler->unblock_signals();
@@ -139,11 +143,11 @@ int uthread_resume(int tid) {
 int uthread_sleep(int num_quantums){
     scheduler->block_signals();
     if(num_quantums <= 0) {
-        return handleErrorLibrary("non-positive quantum error");
+        return handleErrorLibrary((char  *) "non-positive quantum error");
     }
     if(uthread_get_tid() == 0){
         scheduler->unblock_signals();
-        return handleErrorLibrary("The main thread can't go on sleep state");
+        return handleErrorLibrary((char  *) "The main thread can't go on sleep state");
     }
     scheduler->sleep_running_thread(num_quantums);
     scheduler->unblock_signals();
@@ -161,7 +165,7 @@ int uthread_get_tid() {
 }
 
 
-/**
+/**RUNN
  * @brief Returns the total number of quantums since the library was initialized, including the current quantum.
  *
  * Right after the call to uthread_init, the value should be 1.
@@ -191,7 +195,7 @@ int uthread_get_quantums(int tid){
     scheduler->block_signals();
     if (!scheduler->check_thread(tid)) {
         scheduler->unblock_signals();
-        return handleErrorLibrary("no thread with ID tid exists");
+        return handleErrorLibrary((char  *) "no thread with ID tid exists");
     }
     int quantum_thread = (int) scheduler->get_thread(tid).quantum_t;
     scheduler->unblock_signals();

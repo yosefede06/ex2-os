@@ -4,13 +4,13 @@
 
 #include "Handle.h"
 
-int handleErrorLibrary(const std::string &errorMsg) {
-        std::cerr << LIBRARY_ERROR << errorMsg << std::endl;
-        return FAILURE_ERROR;
+int handleErrorLibrary(const char * errorMsg) {
+    fprintf(stderr, LIBRARY_ERROR, errorMsg);
+    return FAILURE_ERROR;
 }
 
-void handleErrorSystemCall(const std::string &errorMsg) {
-    std::cerr << SYSTEM_CALL_ERROR << errorMsg << std::endl;
+void handleErrorSystemCall(const char * errorMsg) {
+    fprintf(stderr, SYSTEM_CALL_ERROR, errorMsg);
     exit (EXIT_CODE_FAILURE);
 }
 

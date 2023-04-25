@@ -7,26 +7,28 @@
 #include "Scheduler.h"
 
 void Scheduler::change_thread(int signal) {
+
     // Block all signals contained in set.
     this->block_signals();
-    this->total_quantums++;
+    if (setitimer(ITIMER_VIRTUAL, &this->timer, nullptr) == FAILURE_ERROR)
+    {
+        handleErrorSystemCall((char  *) "TIMER ERROR");
+    }
     if (save_current_execution_context() == 1) {
         return;
     }
+    _handle_sleep_threads();
     // ready <-> running
     ready_thread(this->running_thread_tid);
     this->run_next_thread();
-    if (setitimer(ITIMER_VIRTUAL, &this->timer, nullptr) == FAILURE_ERROR)
-    {
-        handleErrorSystemCall("TIMER ERROR");
-    }
+
     // Unblock all signals contained in set.
     this->unblock_signals();
 }
 
 void Scheduler::ready_thread(size_t tid) {
+    this->get_thread(tid).state = READY;
     if(this->sleeping_threads.find(tid) == this->sleeping_threads.end()) {
-        this->get_thread(tid).state = READY;
         ready_threads.push_back(tid);
     }
 }
@@ -50,10 +52,10 @@ void Scheduler::_handle_sleep_threads() {
         tid = sleep_thread.first;
         num_quantums = sleep_thread.second;
         Thread & thread = get_thread(tid);
-        if (num_quantums <= total_quantums) {
+        if ((int) num_quantums - 1 <= total_quantums) {
             awake_threads.push_back(tid);
             if (thread.state == READY) {
-                this->ready_thread(tid);
+                ready_threads.push_back(tid);
             }
         }
     }
@@ -62,13 +64,21 @@ void Scheduler::_handle_sleep_threads() {
     }
 }
 
+void Scheduler::reset_time() {
+    if (setitimer(ITIMER_VIRTUAL, &this->timer, nullptr) == FAILURE_ERROR)
+    {
+        handleErrorSystemCall((char  *) "TIMER ERROR");
+    }
+}
+
 void Scheduler::run_next_thread () {
-    _handle_sleep_threads();
+
+    ++this->total_quantums;
     this->running_thread_tid = this->ready_threads.front();
     this->ready_threads.pop_front();
-    Thread new_thread = this->get_thread(this->running_thread_tid);
+    Thread & new_thread = this->get_thread(this->running_thread_tid);
     new_thread.state = RUNNNING;
-    new_thread.quantum_t++;
+    ++new_thread.quantum_t;
     siglongjmp(new_thread.env, 1);
 }
 
@@ -82,7 +92,7 @@ Scheduler::Scheduler(int quantum_usecs, void (* callback_handler)(int)){
 
 
 int Scheduler::init_scheduler(){
-    struct sigaction sa = {nullptr};
+    struct sigaction sa {};
     // Install timer_handler as the signal handler for SIGVTALRM.
     sa.sa_handler = this->_callback_handler;
     if (sigaction(SIGVTALRM, &sa, nullptr) == FAILURE_ERROR)
@@ -94,9 +104,10 @@ int Scheduler::init_scheduler(){
     if(this->set_thread(0, *thread) == FAILURE_ERROR) {
         return FAILURE_ERROR;
     }
-    this->total_quantums++;
+
     sigemptyset (&this->set);
     sigaddset (&this->set, SIGVTALRM);
+    ++this->total_quantums;
 
     // Configure the timer to expire after 1 sec... */
     this->timer.it_value.tv_sec = _quantum_usecs / SECOND;        // first time interval, seconds part
@@ -106,13 +117,16 @@ int Scheduler::init_scheduler(){
     this->timer.it_interval.tv_sec = _quantum_usecs / SECOND;    // following time intervals, seconds part
     this->timer.it_interval.tv_usec = _quantum_usecs % SECOND;    // following time intervals, microseconds part
 
+    if (setitimer(ITIMER_VIRTUAL, &timer, nullptr) == FAILURE_ERROR) {
+        handleErrorSystemCall((char  *) "TIMER ERROR");
+    }
     return 0;
 }
 
 int Scheduler::set_thread(size_t i, Thread & thread) {
 
     if (this->threads.size() > MAX_THREAD_NUM) {
-        return handleErrorLibrary("Maximum number of threads delimited");
+        return handleErrorLibrary((char  *) "Maximum number of threads delimited");
     }
     this->threads[i] = &thread;
     return 0;
@@ -146,14 +160,14 @@ bool Scheduler::check_thread(size_t i) {
 
 int Scheduler::block_signals(){
     if(sigprocmask(SIG_BLOCK, &this->set, nullptr) == FAILURE_ERROR) {
-        handleErrorSystemCall("Signal Block failed");
+        handleErrorSystemCall( (char *) "Signal Block failed");
     }
     return 0;
 }
 
 int Scheduler::unblock_signals(){
     if(sigprocmask(SIG_UNBLOCK, &this->set, nullptr) == FAILURE_ERROR) {
-        handleErrorSystemCall("Signal Unblock failed");
+        handleErrorSystemCall((char  *) "Signal Unblock failed");
     }
     return 0;
 }
@@ -165,7 +179,7 @@ int Scheduler::get_total_quantums() const {
 
 int Scheduler::remove_thread(size_t tid) {
     if (!check_thread(tid)) {
-        return handleErrorLibrary("No thread with Id to remove");
+        return handleErrorLibrary((char  *) "No thread with Id to remove");
     }
     Thread & thread = get_thread(tid);
     this->threads.erase(tid);
@@ -175,6 +189,8 @@ int Scheduler::remove_thread(size_t tid) {
             this->remove_thread_from_ready(tid);
             break;
         case RUNNNING:
+            this->reset_time();
+            _handle_sleep_threads();
             this->run_next_thread();
             break;
         case BLOCKED:
@@ -188,33 +204,36 @@ int Scheduler::remove_thread(size_t tid) {
 }
 
 void Scheduler::remove_thread_from_ready(size_t tid) {
-    for (int i = 0; i < this->ready_threads.size(); i++) {
+    for (size_t i = 0; i < this->ready_threads.size(); i++) {
         if (this->ready_threads[i] == tid) {
-            this->ready_threads.erase(this->ready_threads.begin() + i);
+            this->ready_threads.erase(this->ready_threads.begin() + (int) i);
         }
     }
 }
 
-int Scheduler::block_thread(size_t tid) {
+void Scheduler::block_thread(size_t tid) {
     Thread & thread = this->get_thread(tid);
     switch (thread.state) {
         case READY:
             // Removes thread from ready list if state is READY
+            this->blocked_threads.insert(tid);
+            thread.state = BLOCKED;
             this->remove_thread_from_ready(tid);
             break;
         case RUNNNING:
             // saves state
+            this->blocked_threads.insert(tid);
+            thread.state = BLOCKED;
             if (this->save_current_execution_context() == 1) {
-                return 0;
+                return;
             }
+            this->reset_time();
+            _handle_sleep_threads();
             this->run_next_thread();
             break;
         case BLOCKED:
-            return -1;
+            return;
     }
-    this->blocked_threads.insert(tid);
-    thread.state = BLOCKED;
-    return 0;
 }
 
 
@@ -240,16 +259,16 @@ void Scheduler::sleep_running_thread(size_t num_quantums) {
     if (this->save_current_execution_context() == 1) {
         return;
     }
+    this->get_thread(tid).state = READY;
+    this->reset_time();
+    _handle_sleep_threads();
     run_next_thread();
 }
 
 void Scheduler::remove_all() {
-    std::deque<size_t> tids;
-    for(auto & thread: this->threads) {
-        size_t tid = thread.first;
-        tids.push_back(tid);
+    for (auto i: this->threads) {
+        Thread * thread = i.second;
+        delete thread;
     }
-    for(auto & tid: tids) {
-        this->remove_thread(tid);
-    }
+    this->threads.clear();
 }

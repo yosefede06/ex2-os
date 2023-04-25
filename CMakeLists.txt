@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.1)
 project(threads VERSION 1.0 LANGUAGES C CXX)
 
 add_library(uthreads uthreads.h uthreads.cpp Scheduler Thread Thread.h Thread.cpp
-        Scheduler.h Scheduler.cpp Handle Handle.h Handle.cpp )
+        Scheduler.h Scheduler.cpp Handle Handle.h Handle.cpp)
 
 set_property(TARGET uthreads PROPERTY CXX_STANDARD 11)
 target_compile_options(uthreads PUBLIC -Wall -Wextra)
