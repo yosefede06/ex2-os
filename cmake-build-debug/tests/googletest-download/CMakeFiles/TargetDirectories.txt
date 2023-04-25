@@ -1,3 +1,0 @@
-/cs/usr/r301299/Desktop/OS/ex2-os/cmake-build-debug/tests/googletest-download/CMakeFiles/googletest.dir
-/cs/usr/r301299/Desktop/OS/ex2-os/cmake-build-debug/tests/googletest-download/CMakeFiles/edit_cache.dir
-/cs/usr/r301299/Desktop/OS/ex2-os/cmake-build-debug/tests/googletest-download/CMakeFiles/rebuild_cache.dir

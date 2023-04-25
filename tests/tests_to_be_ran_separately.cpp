@@ -86,6 +86,7 @@ void threadQuantumSleep(int threadQuants)
      * take much less than a microsecond
      */
     while (uthread_get_quantums(myId) != end) {} // Busy wait... Sleep (suspend) threadQuants quantums
+
 }
 
 
@@ -147,6 +148,7 @@ TEST(Test1, BasicFunctionality)
 
     // by now thread 1 was terminated, so operations on it should fail
     expect_thread_library_error([]() { return uthread_get_quantums(1); });
+
     expect_thread_library_error([]() { return uthread_block(1); });
     expect_thread_library_error([]() { return uthread_resume(1); });
     expect_thread_library_error([](){ return uthread_terminate(1); });

@@ -1,4 +1,0 @@
-# ninja log v5
-0	254	1681922662524886736	CMakeFiles/ex2_os.dir/demo_itimer.c.o	5f3b9c8dc068d425
-1	254	1681922662524886611	CMakeFiles/ex2_os.dir/demo_singInt_handler.c.o	9b2c04bc927f36cc
-1	734	1681922663003531030	CMakeFiles/ex2_os.dir/uthreads.cpp.o	636f7a519dd834e4
